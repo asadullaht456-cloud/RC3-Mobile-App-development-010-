@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, {
@@ -122,14 +123,20 @@ const AnimatedLogo: React.FC<{ colors: any }> = ({ colors }) => {
 
 export const LoginScreen: React.FC = () => {
   const { colors } = useTheme();
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, directLogin } = useAuth();
 
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('ali@demo.com');
   const [password, setPassword] = useState('password123');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSignIn = async () => {
+  const handleSubmit = async () => {
+    if (isSignUp && !name.trim()) {
+      setError('Please enter your full name');
+      return;
+    }
     if (!email || !password) {
       setError('Please fill in both email and password');
       return;
@@ -137,25 +144,25 @@ export const LoginScreen: React.FC = () => {
     setError(null);
     setLoading(true);
     try {
-      await signIn(email, password);
+      if (isSignUp) {
+        await signUp(email, password);
+      } else {
+        await signIn(email, password);
+      }
     } catch (err: any) {
-      setError(err?.message || 'Login failed. Please check your credentials.');
+      setError(err?.message || (isSignUp ? 'Sign up failed.' : 'Login failed.'));
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSignUp = async () => {
-    if (!email || !password) {
-      setError('Please fill in both email and password');
-      return;
-    }
+  const handleDirectLogin = async (memberId: string) => {
     setError(null);
     setLoading(true);
     try {
-      await signUp(email, password);
+      await directLogin(memberId);
     } catch (err: any) {
-      setError(err?.message || 'Sign up failed.');
+      setError(err?.message || 'Direct login failed');
     } finally {
       setLoading(false);
     }
@@ -175,8 +182,25 @@ export const LoginScreen: React.FC = () => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Top Bar with Theme Toggle */}
+          {/* Top Bar with Direct Login at corner & Theme Toggle */}
           <View style={styles.topBar}>
+            <TouchableOpacity
+              style={[
+                styles.cornerDirectBtn,
+                {
+                  backgroundColor: colors.primaryBg,
+                  borderColor: colors.primary,
+                },
+              ]}
+              onPress={() => handleDirectLogin('M01')}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="flash" size={14} color={colors.primary} />
+              <Text style={[styles.cornerDirectText, { color: colors.primary }]}>
+                Direct Login
+              </Text>
+            </TouchableOpacity>
+
             <ThemeToggle />
           </View>
 
@@ -196,6 +220,64 @@ export const LoginScreen: React.FC = () => {
 
           {/* Form Card */}
           <Card style={styles.formCard}>
+            {/* Mode Switcher Tabs */}
+            <View style={[styles.tabContainer, { backgroundColor: colors.bg, borderColor: colors.line }]}>
+              <TouchableOpacity
+                style={[
+                  styles.authTab,
+                  !isSignUp && { backgroundColor: colors.surface },
+                ]}
+                onPress={() => {
+                  setIsSignUp(false);
+                  setError(null);
+                }}
+              >
+                <Text
+                  style={[
+                    styles.tabText,
+                    { color: !isSignUp ? colors.primary : colors.muted },
+                    !isSignUp && { fontWeight: '700' },
+                  ]}
+                >
+                  Sign In
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.authTab,
+                  isSignUp && { backgroundColor: colors.surface },
+                ]}
+                onPress={() => {
+                  setIsSignUp(true);
+                  setError(null);
+                }}
+              >
+                <Text
+                  style={[
+                    styles.tabText,
+                    { color: isSignUp ? colors.primary : colors.muted },
+                    isSignUp && { fontWeight: '700' },
+                  ]}
+                >
+                  Sign Up
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {isSignUp && (
+              <Input
+                label="Full Name"
+                icon="person-outline"
+                value={name}
+                onChangeText={(t) => {
+                  setName(t);
+                  setError(null);
+                }}
+                placeholder="e.g. Danish or Zainab"
+                autoCapitalize="words"
+              />
+            )}
+
             <Input
               label="Email"
               icon="mail-outline"
@@ -208,6 +290,7 @@ export const LoginScreen: React.FC = () => {
               keyboardType="email-address"
               autoCapitalize="none"
             />
+
             <Input
               label="Password"
               icon="lock-closed-outline"
@@ -227,30 +310,53 @@ export const LoginScreen: React.FC = () => {
             ) : null}
 
             <Button
-              label="Sign in"
-              icon="log-in-outline"
+              label={isSignUp ? 'Sign up new member' : 'Sign in'}
+              icon={isSignUp ? 'person-add-outline' : 'log-in-outline'}
               loading={loading}
               disabled={loading}
-              onPress={handleSignIn}
-              style={{ marginTop: 4 }}
+              onPress={handleSubmit}
+              style={{ marginTop: 6 }}
             />
 
-            {/* Divider */}
-            <View style={styles.dividerRow}>
-              <View style={[styles.dividerLine, { backgroundColor: colors.line }]} />
-              <Text style={[typography.caption, { color: colors.muted, marginHorizontal: 12 }]}>
-                New here?
-              </Text>
-              <View style={[styles.dividerLine, { backgroundColor: colors.line }]} />
+            {/* Quick 1-Tap Demo Logins */}
+            <View style={styles.quickLoginSection}>
+              <View style={styles.dividerRow}>
+                <View style={[styles.dividerLine, { backgroundColor: colors.line }]} />
+                <Text style={[typography.caption, { color: colors.muted, marginHorizontal: 10 }]}>
+                  Instant Demo Login
+                </Text>
+                <View style={[styles.dividerLine, { backgroundColor: colors.line }]} />
+              </View>
+
+              <View style={styles.demoChipsRow}>
+                <TouchableOpacity
+                  style={[styles.demoChip, { borderColor: colors.line, backgroundColor: colors.bg }]}
+                  onPress={() => handleDirectLogin('M01')}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.demoChipText, { color: colors.primary }]}>Ali</Text>
+                  <Text style={[styles.demoChipSub, { color: colors.muted }]}>M01</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.demoChip, { borderColor: colors.line, backgroundColor: colors.bg }]}
+                  onPress={() => handleDirectLogin('M02')}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.demoChipText, { color: colors.primary }]}>Ayesha</Text>
+                  <Text style={[styles.demoChipSub, { color: colors.muted }]}>M02</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.demoChip, { borderColor: colors.line, backgroundColor: colors.bg }]}
+                  onPress={() => handleDirectLogin('M03')}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.demoChipText, { color: colors.primary }]}>Bilal</Text>
+                  <Text style={[styles.demoChipSub, { color: colors.muted }]}>M03</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-
-            <Button
-              label="Sign up"
-              variant="outline"
-              icon="person-add-outline"
-              disabled={loading}
-              onPress={handleSignUp}
-            />
           </Card>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -270,19 +376,34 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   topBar: {
-    alignItems: 'flex-end',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 12,
+  },
+  cornerDirectBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 20,
+    borderWidth: 1,
+  },
+  cornerDirectText: {
+    fontSize: 12,
+    fontWeight: '700',
   },
   header: {
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 20,
   },
   logoWrapper: {
     width: 104,
     height: 104,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
+    marginBottom: 14,
     position: 'relative',
   },
   logoHalo: {
@@ -312,11 +433,11 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   title: {
-    fontSize: 36,
-    lineHeight: 42,
+    fontSize: 34,
+    lineHeight: 40,
     fontWeight: '800',
     letterSpacing: -0.5,
-    marginBottom: 6,
+    marginBottom: 4,
   },
   subtitleRow: {
     flexDirection: 'row',
@@ -331,13 +452,56 @@ const styles = StyleSheet.create({
   formCard: {
     width: '100%',
   },
+  tabContainer: {
+    flexDirection: 'row',
+    padding: 3,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginBottom: 16,
+  },
+  authTab: {
+    flex: 1,
+    paddingVertical: 8,
+    alignItems: 'center',
+    borderRadius: 9,
+  },
+  tabText: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  quickLoginSection: {
+    marginTop: 16,
+  },
   dividerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 18,
+    marginBottom: 12,
   },
   dividerLine: {
     flex: 1,
     height: 1,
+  },
+  demoChipsRow: {
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'space-between',
+  },
+  demoChip: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 6,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  demoChipText: {
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  demoChipSub: {
+    fontSize: 10,
+    marginTop: 1,
+    fontWeight: '500',
   },
 });

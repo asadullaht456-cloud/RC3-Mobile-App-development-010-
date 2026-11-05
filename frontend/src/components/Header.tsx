@@ -1,14 +1,17 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 import { typography, spacing } from '../theme';
 import { ThemeToggle } from './ThemeToggle';
+import { IconButton } from './IconButton';
 
 interface HeaderProps {
   title: string;
   caption?: string;
   rightAction?: React.ReactNode;
   showThemeToggle?: boolean;
+  showSignOut?: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -16,8 +19,10 @@ export const Header: React.FC<HeaderProps> = ({
   caption,
   rightAction,
   showThemeToggle = true,
+  showSignOut = true,
 }) => {
   const { colors } = useTheme();
+  const { user, signOut } = useAuth();
 
   return (
     <View style={styles.container}>
@@ -33,6 +38,13 @@ export const Header: React.FC<HeaderProps> = ({
       </View>
       <View style={styles.actions}>
         {showThemeToggle && <ThemeToggle />}
+        {showSignOut && user && (
+          <IconButton
+            name="log-out-outline"
+            accessibilityLabel="Sign Out / Switch Account"
+            onPress={signOut}
+          />
+        )}
         {rightAction}
       </View>
     </View>

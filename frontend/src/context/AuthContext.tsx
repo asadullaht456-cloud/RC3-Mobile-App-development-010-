@@ -8,16 +8,18 @@ interface AuthContextType {
   loading: boolean;
   signIn: (email: string, pass: string) => Promise<void>;
   signUp: (email: string, pass: string) => Promise<void>;
+  directLogin: (memberId?: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
-const AUTH_STORAGE_KEY = 'auth_session_user';
+const AUTH_STORAGE_KEY = 'auth_session_user_v2';
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   signIn: async () => {},
   signUp: async () => {},
+  directLogin: async () => {},
   signOut: async () => {},
 });
 
@@ -42,10 +44,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (saved) {
           setUser(JSON.parse(saved));
         } else {
-          // Default mock session for Ali
-          const defaultUser: Member = { id: 'M01', name: 'Ali', email: 'ali@demo.com' };
-          setUser(defaultUser);
-          await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(defaultUser));
+          // Keep user as null so the Sign In / Sign Up screen is presented
+          setUser(null);
         }
       } catch (err) {
         console.warn('Failed restoring auth session', err);
@@ -58,14 +58,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signIn = async (email: string, _pass: string) => {
     setLoading(true);
     try {
-      // Match email to known members: ali@demo.com, ayesha@demo.com, bilal@demo.com
       const members = await api.getMembers();
       const matched = members.find(
         (m) => m.email.toLowerCase() === email.trim().toLowerCase()
       );
 
       const loggedInUser: Member = matched || {
-        id: 'M01',
+        id: `M${Date.now()}`,
         name: email.split('@')[0],
         email: email.trim(),
       };
@@ -81,13 +80,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return signIn(email, pass);
   };
 
+  const directLogin = async (memberId: string = 'M01') => {
+    setLoading(true);
+    try {
+      const members = await api.getMembers();
+      const matched =
+        members.find((m) => m.id === memberId) ||
+        members[0] || { id: 'M01', name: 'Ali', email: 'ali@demo.com' };
+      setUser(matched);
+      await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(matched));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const signOut = async () => {
     setUser(null);
     await AsyncStorage.removeItem(AUTH_STORAGE_KEY);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signUp, directLogin, signOut }}>
       {children}
     </AuthContext.Provider>
   );

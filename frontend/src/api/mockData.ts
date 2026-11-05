@@ -68,6 +68,25 @@ class MockDatabase {
     return this.members;
   }
 
+  addMember(name: string, email: string): Member {
+    let maxId = 0;
+    for (const m of this.members) {
+      const match = m.id.match(/^M(\d+)$/);
+      if (match) {
+        const num = parseInt(match[1], 10);
+        if (num > maxId) maxId = num;
+      }
+    }
+    const nextId = `M${String(maxId + 1).padStart(2, '0')}`;
+    const newMember: Member = {
+      id: nextId,
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+    };
+    this.members.push(newMember);
+    return newMember;
+  }
+
   getShopping(): ShoppingItem[] {
     return this.shopping;
   }

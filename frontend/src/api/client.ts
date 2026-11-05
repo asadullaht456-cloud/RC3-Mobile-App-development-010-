@@ -91,6 +91,16 @@ export const api = {
     }
   },
 
+  async addMember(data: { name: string; email: string }): Promise<Member> {
+    if (USE_MOCK) return mockDb.addMember(data.name, data.email);
+    try {
+      const res = await apiClient.post<Member>('/members', data);
+      return res.data;
+    } catch {
+      return mockDb.addMember(data.name, data.email);
+    }
+  },
+
   async getShopping(): Promise<ShoppingItem[]> {
     if (USE_MOCK) return mockDb.getShopping();
     try {
