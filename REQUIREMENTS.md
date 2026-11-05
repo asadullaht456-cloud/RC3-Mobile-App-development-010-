@@ -114,16 +114,16 @@ Shared: `/docs/API_CONTRACT.md` (owned by Dev 2, read-only for Dev 1)
 # Dev 1: Frontend + Animations
 
 ## Phase F1: Setup, Navigation & API Layer
-- [ ] `/frontend` initialized (Expo + TypeScript) with `expo-dev-client`
-- [ ] Firebase packages installed and configured (`google-services.json` / `GoogleService-Info.plist`, config plugins in `app.json`)
-- [ ] Dev build runs on device/emulator
-- [ ] Folder structure: `screens/`, `components/`, `api/`, `context/`, `services/`, `types/`, `utils/`, `theme/`
-- [ ] Bottom tab navigation: Home, Shopping, Expenses
-- [ ] Theme file (colors, spacing, typography)
-- [ ] Shared TypeScript types matching API_CONTRACT.md
-- [ ] API client (axios) with configurable base URL and interceptor that attaches the Firebase ID token
-- [ ] Mock data layer toggle (`USE_MOCK`)
-- [ ] Money formatting helper (PKR, 2 decimals)
+- [x] `/frontend` initialized (Expo + TypeScript) with `expo-dev-client`
+- [x] Firebase packages installed and configured (`google-services.json` / `GoogleService-Info.plist`, config plugins in `app.json`)
+- [x] Dev build runs on device/emulator
+- [x] Folder structure: `screens/`, `components/`, `api/`, `context/`, `services/`, `types/`, `utils/`, `theme/`
+- [x] Bottom tab navigation: Home, Shopping, Expenses
+- [x] Theme file (colors, spacing, typography)
+- [x] Shared TypeScript types matching API_CONTRACT.md
+- [x] API client (axios) with configurable base URL and interceptor that attaches the Firebase ID token
+- [x] Mock data layer toggle (`USE_MOCK`)
+- [x] Money formatting helper (PKR, 2 decimals)
 
 ## Phase F2: Authentication UI
 - [ ] Login screen (email + password) using Firebase Auth
