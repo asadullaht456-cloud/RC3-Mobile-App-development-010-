@@ -7,3 +7,4 @@ const router = Router();
 router.get('/', authMiddleware, getMembers);
 
 export default router;
+

@@ -8,3 +8,4 @@ router.get('/balances', authMiddleware, getBalances);
 router.get('/budget', authMiddleware, getBudget);
 
 export default router;
+

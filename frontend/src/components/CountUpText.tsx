@@ -45,3 +45,4 @@ export const CountUpText: React.FC<CountUpTextProps> = ({
 
   return <Text style={style}>{formatPKRAbs(displayValue)}</Text>;
 };
+

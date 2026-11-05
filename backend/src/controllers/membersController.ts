@@ -7,3 +7,4 @@ export function getMembers(_req: AuthenticatedRequest, res: Response): void {
   const members = stmt.all();
   res.status(200).json(members);
 }
+

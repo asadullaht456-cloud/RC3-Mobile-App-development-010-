@@ -7,3 +7,4 @@ const router = Router();
 router.post('/', authMiddleware, createSettlement);
 
 export default router;
+

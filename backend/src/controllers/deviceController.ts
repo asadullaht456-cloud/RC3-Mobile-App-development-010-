@@ -29,3 +29,4 @@ export function removeToken(req: AuthenticatedRequest, res: Response): void {
 
   res.status(200).json({ success: true });
 }
+

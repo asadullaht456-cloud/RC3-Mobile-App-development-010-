@@ -13,3 +13,4 @@ export function getMe(req: AuthenticatedRequest, res: Response): void {
     email: req.member.email,
   });
 }
+

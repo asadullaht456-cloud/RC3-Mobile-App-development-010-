@@ -8,3 +8,4 @@ router.post('/token', authMiddleware, registerToken);
 router.delete('/token', authMiddleware, removeToken);
 
 export default router;
+

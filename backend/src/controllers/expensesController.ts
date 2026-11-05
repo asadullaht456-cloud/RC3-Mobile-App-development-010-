@@ -148,3 +148,4 @@ export async function createExpense(req: AuthenticatedRequest, res: Response): P
   const budgetInfo = calculateBudget();
   checkAndSendBudgetAlert(budgetInfo.status, budgetInfo.spent_percentage);
 }
+

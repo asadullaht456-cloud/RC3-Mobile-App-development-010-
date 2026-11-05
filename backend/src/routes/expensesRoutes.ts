@@ -8,3 +8,4 @@ router.get('/', authMiddleware, getExpensesList);
 router.post('/', authMiddleware, createExpense);
 
 export default router;
+

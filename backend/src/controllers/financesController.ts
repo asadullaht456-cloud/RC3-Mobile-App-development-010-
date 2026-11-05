@@ -11,3 +11,4 @@ export function getBudget(_req: AuthenticatedRequest, res: Response): void {
   const result = calculateBudget();
   res.status(200).json(result);
 }
+

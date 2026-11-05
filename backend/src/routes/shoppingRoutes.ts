@@ -13,3 +13,4 @@ router.post('/', authMiddleware, addShoppingItem);
 router.post('/checkout', authMiddleware, checkoutShopping);
 
 export default router;
+
