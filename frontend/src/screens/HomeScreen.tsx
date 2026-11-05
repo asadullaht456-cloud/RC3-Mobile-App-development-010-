@@ -20,6 +20,7 @@ import {
   ProgressBar,
   Tag,
   IconButton,
+  CountUpText,
 } from '../components';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
@@ -165,9 +166,10 @@ export const HomeScreen: React.FC = () => {
             </View>
           </View>
 
-          <Text style={[typography.heroAmount, { color: colors.onPrimary, marginVertical: 8 }]}>
-            {formatPKRAbs(netBalance)}
-          </Text>
+          <CountUpText
+            value={netBalance}
+            style={[typography.heroAmount, { color: colors.onPrimary, marginVertical: 8 }]}
+          />
 
           <Text style={[typography.caption, { color: 'rgba(4, 47, 46, 0.8)' }]}>
             {isOwed

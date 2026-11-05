@@ -41,69 +41,69 @@ Shared: `/docs/API_CONTRACT.md` (owned by Dev 2, read-only for Dev 1)
 # Dev 2: Backend + Database
 
 ## Phase B1: Setup & Schema
-- [ ] `/backend` initialized (Express + TypeScript + better-sqlite3 + zod + cors + firebase-admin)
-- [ ] Folder structure: `routes/`, `controllers/`, `services/`, `db/`, `middleware/`, `utils/`
-- [ ] SQLite tables: `members`, `shopping_items`, `expenses`, `expense_splits`, `settlements`, `settings`, `device_tokens`
-- [ ] `members` includes `email` and `firebase_uid`
-- [ ] Seed members: M01 Ali, M02 Ayesha, M03 Bilal (with emails)
-- [ ] Seed monthly budget: PKR 5,000.00
-- [ ] Money stored as integer paisa
-- [ ] DB file persists across server restarts
-- [ ] Firebase Admin initialized from env (service account path in `.env`, gitignored)
-- [ ] `/docs/API_CONTRACT.md` written (all endpoints, payloads, responses, auth header, error format)
-- [ ] Standard error response: `{ error: string, details?: any }`
+- [x] `/backend` initialized (Express + TypeScript + better-sqlite3 + zod + cors + firebase-admin)
+- [x] Folder structure: `routes/`, `controllers/`, `services/`, `db/`, `middleware/`, `utils/`
+- [x] SQLite tables: `members`, `shopping_items`, `expenses`, `expense_splits`, `settlements`, `settings`, `device_tokens`
+- [x] `members` includes `email` and `firebase_uid`
+- [x] Seed members: M01 Ali, M02 Ayesha, M03 Bilal (with emails)
+- [x] Seed monthly budget: PKR 5,000.00
+- [x] Money stored as integer paisa
+- [x] DB file persists across server restarts
+- [x] Firebase Admin initialized from env (service account path in `.env`, gitignored)
+- [x] `/docs/API_CONTRACT.md` written (all endpoints, payloads, responses, auth header, error format)
+- [x] Standard error response: `{ error: string, details?: any }`
 
 ## Phase B2: Firebase Authentication
-- [ ] Auth middleware verifies `Authorization: Bearer <Firebase ID token>`
-- [ ] Missing/invalid token returns 401
-- [ ] First login links Firebase user to member by matching email; stores `firebase_uid`
-- [ ] `GET /api/auth/me` returns the linked member `{id, name}`
-- [ ] All `/api/*` routes protected except health check
-- [ ] Unknown email (no matching member) returns 403
+- [x] Auth middleware verifies `Authorization: Bearer <Firebase ID token>`
+- [x] Missing/invalid token returns 401
+- [x] First login links Firebase user to member by matching email; stores `firebase_uid`
+- [x] `GET /api/auth/me` returns the linked member `{id, name}`
+- [x] All `/api/*` routes protected except health check
+- [x] Unknown email (no matching member) returns 403
 
 ## Phase B3: Members & Shopping APIs
-- [ ] `GET /api/members` returns `[{id, name}]`
-- [ ] `GET /api/shopping` returns items `{id, title, unit, requested_qty, status}`
-- [ ] `POST /api/shopping` validates and creates item (status = Pending)
-- [ ] Unit limited to: pack, dozen, bottle, bag
-- [ ] Zod validation on all inputs
+- [x] `GET /api/members` returns `[{id, name}]`
+- [x] `GET /api/shopping` returns items `{id, title, unit, requested_qty, status}`
+- [x] `POST /api/shopping` validates and creates item (status = Pending)
+- [x] Unit limited to: pack, dozen, bottle, bag
+- [x] Zod validation on all inputs
 
 ## Phase B4: Financial Engine & Expenses
-- [ ] Equal split: remainder paisa given 1-by-1 in ascending member ID order
-- [ ] Rounding check: 1000.00 across M01/M02/M03 = 333.34 / 333.33 / 333.33
-- [ ] Custom split: splits must sum exactly to amount
-- [ ] `POST /api/expenses` (title, category, amount, payer_id, split_type, splits, date)
-- [ ] `GET /api/balances` using: Paid - Share Owed + Settlements Received - Settlements Sent
-- [ ] Sum of all balances = 0.00 always
-- [ ] Monthly spending + budget status endpoint (e.g. `GET /api/budget`): total, budget, remaining, percent, status (84% = "Near Limit")
+- [x] Equal split: remainder paisa given 1-by-1 in ascending member ID order
+- [x] Rounding check: 1000.00 across M01/M02/M03 = 333.34 / 333.33 / 333.33
+- [x] Custom split: splits must sum exactly to amount
+- [x] `POST /api/expenses` (title, category, amount, payer_id, split_type, splits, date)
+- [x] `GET /api/balances` using: Paid - Share Owed + Settlements Received - Settlements Sent
+- [x] Sum of all balances = 0.00 always
+- [x] Monthly spending + budget status endpoint (e.g. `GET /api/budget`): total, budget, remaining, percent, status (84% = "Near Limit")
 
 ## Phase B5: Checkout & Settlement
-- [ ] `POST /api/shopping/checkout` (item_ids, total_paid, payer_id, split_members)
-- [ ] Checkout marks items Bought and auto-posts expense in one DB transaction
-- [ ] `POST /api/settle` (sender_id, recipient_id, amount)
-- [ ] Reject: amount <= 0, sender = recipient, over-settlement (exceeds debtor's debt or recipient's credit)
-- [ ] Settlements do not change total household spending
+- [x] `POST /api/shopping/checkout` (item_ids, total_paid, payer_id, split_members)
+- [x] Checkout marks items Bought and auto-posts expense in one DB transaction
+- [x] `POST /api/settle` (sender_id, recipient_id, amount)
+- [x] Reject: amount <= 0, sender = recipient, over-settlement (exceeds debtor's debt or recipient's credit)
+- [x] Settlements do not change total household spending
 
 ## Phase B6: Notifications (FCM)
-- [ ] `POST /api/devices/token` saves/updates FCM token for the logged-in member
-- [ ] `DELETE /api/devices/token` removes token (logout)
-- [ ] Notification service wraps `firebase-admin` messaging
-- [ ] Push on: expense added / checkout posted, settlement recorded, budget Near Limit / Exceeded
-- [ ] Budget alert sent only when status changes (no repeat spam)
-- [ ] Invalid/expired tokens are removed automatically
-- [ ] Notification failure never breaks the main API response (fire-and-forget with logging)
-- [ ] Payload includes `type` and `screen` fields for frontend routing
+- [x] `POST /api/devices/token` saves/updates FCM token for the logged-in member
+- [x] `DELETE /api/devices/token` removes token (logout)
+- [x] Notification service wraps `firebase-admin` messaging
+- [x] Push on: expense added / checkout posted, settlement recorded, budget Near Limit / Exceeded
+- [x] Budget alert sent only when status changes (no repeat spam)
+- [x] Invalid/expired tokens are removed automatically
+- [x] Notification failure never breaks the main API response (fire-and-forget with logging)
+- [x] Payload includes `type` and `screen` fields for frontend routing
 
 ## Phase B7: Validation, Testing & Handoff
-- [ ] Benchmark data verified: spending 4,200.00; Ali +250, Ayesha -450, Bilal +200
-- [ ] Settle 250 (Ayesha to Ali) and 200 (Ayesha to Bilal): all balances 0.00, spending still 4,200.00
-- [ ] Invalid requests return clear error messages
-- [ ] Unauthenticated requests rejected on every protected route
-- [ ] Server restart keeps all data
-- [ ] CORS enabled; server reachable from phone on LAN
-- [ ] API_CONTRACT.md matches final behavior
-- [ ] Reset/seed script for demo
-- [ ] **Sync S2 announced to Dev 1**
+- [x] Benchmark data verified: spending 4,200.00; Ali +250, Ayesha -450, Bilal +200
+- [x] Settle 250 (Ayesha to Ali) and 200 (Ayesha to Bilal): all balances 0.00, spending still 4,200.00
+- [x] Invalid requests return clear error messages
+- [x] Unauthenticated requests rejected on every protected route
+- [x] Server restart keeps all data
+- [x] CORS enabled; server reachable from phone on LAN
+- [x] API_CONTRACT.md matches final behavior
+- [x] Reset/seed script for demo
+- [x] **Sync S2 announced to Dev 1**
 
 ## Phase B8: Surprise Slot (Hour 3.5)
 - [ ] Reserved for the organizer's surprise requirement (backend part)
@@ -126,63 +126,63 @@ Shared: `/docs/API_CONTRACT.md` (owned by Dev 2, read-only for Dev 1)
 - [x] Money formatting helper (PKR, 2 decimals)
 
 ## Phase F2: Authentication UI
-- [ ] Login screen (email + password) using Firebase Auth
-- [ ] Auth context with `onAuthStateChanged` (session persists across app restarts)
-- [ ] Auth-gated navigation: logged out sees Login, logged in sees tabs
-- [ ] Logout action
-- [ ] Friendly error messages (wrong password, no network, user not found)
-- [ ] Loading state and disabled button during login
-- [ ] After login, fetch `GET /api/auth/me` (mocked until S2) and set as default active member
+- [x] Login screen (email + password) using Firebase Auth
+- [x] Auth context with `onAuthStateChanged` (session persists across app restarts)
+- [x] Auth-gated navigation: logged out sees Login, logged in sees tabs
+- [x] Logout action
+- [x] Friendly error messages (wrong password, no network, user not found)
+- [x] Loading state and disabled button during login
+- [x] After login, fetch `GET /api/auth/me` (mocked until S2) and set as default active member
 
 ## Phase F3: Home Dashboard
-- [ ] Active member selector (Ali, Ayesha, Bilal), persisted with AsyncStorage
-- [ ] Monthly spending + budget progress bar with status label (Safe / Near Limit / Exceeded)
-- [ ] Net balance card ("You are owed PKR X" / "You owe PKR X")
-- [ ] Pending shopping items count
-- [ ] Reusable components: `Card`, `ProgressBar`, `MemberSelector`
+- [x] Active member selector (Ali, Ayesha, Bilal), persisted with AsyncStorage
+- [x] Monthly spending + budget progress bar with status label (Safe / Near Limit / Exceeded)
+- [x] Net balance card ("You are owed PKR X" / "You owe PKR X")
+- [x] Pending shopping items count
+- [x] Reusable components: `Card`, `ProgressBar`, `MemberSelector`
 
 ## Phase F4: Shopping List & Checkout
-- [ ] Item list with status tags (Pending, Bought)
-- [ ] Add item form (title, unit picker, requested quantity)
-- [ ] Multi-select items
-- [ ] Checkout modal: total price, payer picker, split members
-- [ ] Form validation before submit
+- [x] Item list with status tags (Pending, Bought)
+- [x] Add item form (title, unit picker, requested quantity)
+- [x] Multi-select items
+- [x] Checkout modal: total price, payer picker, split members
+- [x] Form validation before submit
 
 ## Phase F5: Expenses & Settle Up
-- [ ] Manual expense form (title, category, date, amount, payer, split strategy)
-- [ ] Custom split input per member with live sum check
-- [ ] Live balance summary table
-- [ ] Settle Up dialog (sender, recipient, amount)
-- [ ] Client-side checks: amount > 0, sender != recipient
+- [x] Manual expense form (title, category, date, amount, payer, split strategy)
+- [x] Custom split input per member with live sum check
+- [x] Live balance summary table
+- [x] Settle Up dialog (sender, recipient, amount)
+- [x] Client-side checks: amount > 0, sender != recipient
 
 ## Phase F6: Notifications (FCM)
-- [ ] Notification permission request (Android 13+/iOS)
-- [ ] Get FCM token after login and send via `POST /api/devices/token` (mocked until S2)
-- [ ] Handle token refresh
-- [ ] Remove token on logout
-- [ ] Foreground messages shown as in-app toast
-- [ ] Background/quit notification tap navigates to the right screen using payload `screen`
-- [ ] Data refresh when a notification arrives
+- [x] Notification permission request (Android 13+/iOS)
+- [x] Get FCM token after login and send via `POST /api/devices/token` (mocked until S2)
+- [x] Handle token refresh
+- [x] Remove token on logout
+- [x] Foreground messages shown as in-app toast
+- [x] Background/quit notification tap navigates to the right screen using payload `screen`
+- [x] Data refresh when a notification arrives
 
 ## Phase F7: Animations & Polish
-- [ ] Animated budget progress bar fill (on load and on update)
-- [ ] Balance card number count-up
-- [ ] Tab screen transitions
-- [ ] Login screen entrance animation
-- [ ] Shopping item select/deselect animation
-- [ ] Item status change animation (Pending to Bought)
-- [ ] Modal/dialog slide + fade
-- [ ] Button press feedback
-- [ ] Loading skeletons for lists/cards
-- [ ] Toast enter/exit animation
-- [ ] Animations use native driver or Reanimated; no frame drops on lists
+- [x] Animated budget progress bar fill (on load and on update)
+- [x] Balance card number count-up
+- [x] Tab screen transitions
+- [x] Login screen entrance animation
+- [x] Shopping item select/deselect animation
+- [x] Item status change animation (Pending to Bought)
+- [x] Modal/dialog slide + fade
+- [x] Button press feedback
+- [x] Loading skeletons for lists/cards
+- [x] Toast enter/exit animation
+- [x] Animations use native driver or Reanimated; no frame drops on lists
 
 ## Phase F8: Integration & Error Handling
-- [ ] Starts only after Sync S2
-- [ ] `USE_MOCK` off; all screens use real API with Firebase token
-- [ ] 401 response triggers logout / re-auth
-- [ ] Loading spinner on every async request
-- [ ] Submit buttons disabled while request is in flight (checkout, expense, settle)
+- [x] Starts only after Sync S2
+- [x] `USE_MOCK` off; all screens use real API with Firebase token
+- [x] 401 response triggers logout / re-auth
+- [x] Loading spinner on every async request
+- [x] Submit buttons disabled while request is in flight (checkout, expense, settle)
 - [ ] Error toasts for backend validation errors
 - [ ] Network-down banner/toast
 - [ ] Pull-to-refresh on lists

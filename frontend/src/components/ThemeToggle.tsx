@@ -1,5 +1,10 @@
-import React from 'react';
-import { TouchableOpacity, View, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { TouchableOpacity, StyleSheet } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 
@@ -7,9 +12,24 @@ export const ThemeToggle: React.FC = () => {
   const { mode, toggle, colors } = useTheme();
   const isDark = mode === 'dark';
 
+  const translateX = useSharedValue(isDark ? 24 : 0);
+
+  useEffect(() => {
+    translateX.value = withSpring(isDark ? 24 : 0, {
+      damping: 15,
+      stiffness: 150,
+    });
+  }, [isDark]);
+
+  const knobAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: translateX.value }],
+    };
+  });
+
   return (
     <TouchableOpacity
-      activeOpacity={0.8}
+      activeOpacity={0.85}
       onPress={toggle}
       accessibilityRole="switch"
       accessibilityLabel={`Switch to ${isDark ? 'light' : 'dark'} mode`}
@@ -21,13 +41,13 @@ export const ThemeToggle: React.FC = () => {
         },
       ]}
     >
-      <View
+      <Animated.View
         style={[
           styles.knob,
           {
             backgroundColor: colors.primary,
-            transform: [{ translateX: isDark ? 24 : 0 }],
           },
+          knobAnimatedStyle,
         ]}
       >
         <Ionicons
@@ -35,7 +55,7 @@ export const ThemeToggle: React.FC = () => {
           size={13}
           color={colors.onPrimary}
         />
-      </View>
+      </Animated.View>
     </TouchableOpacity>
   );
 };

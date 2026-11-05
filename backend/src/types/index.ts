@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 export interface Member {
   id: string;
   name: string;
@@ -59,3 +61,6 @@ export interface ApiErrorResponse {
   details?: any;
 }
 
+export interface AuthenticatedRequest extends Request {
+  member?: Member;
+}

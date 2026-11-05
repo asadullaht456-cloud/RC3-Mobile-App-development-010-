@@ -1,5 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
 import { useTheme } from '../context/ThemeContext';
 import { BudgetStatus } from '../types';
 
@@ -11,6 +17,21 @@ interface ProgressBarProps {
 export const ProgressBar: React.FC<ProgressBarProps> = ({ percentage, status }) => {
   const { colors } = useTheme();
   const clamped = Math.min(Math.max(percentage, 0), 100);
+
+  const animatedWidth = useSharedValue(0);
+
+  useEffect(() => {
+    animatedWidth.value = withTiming(clamped, {
+      duration: 800,
+      easing: Easing.out(Easing.cubic),
+    });
+  }, [clamped]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      width: `${animatedWidth.value}%`,
+    };
+  });
 
   const getFillColor = (): string => {
     switch (status) {
@@ -26,13 +47,13 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ percentage, status }) 
 
   return (
     <View style={[styles.track, { backgroundColor: colors.surface2 }]}>
-      <View
+      <Animated.View
         style={[
           styles.fill,
           {
-            width: `${clamped}%`,
             backgroundColor: getFillColor(),
           },
+          animatedStyle,
         ]}
       />
     </View>

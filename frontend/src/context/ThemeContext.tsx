@@ -16,8 +16,8 @@ const THEME_STORAGE_KEY = 'theme_mode';
 const ThemeContext = createContext<ThemeContextType>({
   mode: 'dark',
   colors: darkColors,
-  toggle: () => {},
-  setMode: () => {},
+  toggle: () => { },
+  setMode: () => { },
 });
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

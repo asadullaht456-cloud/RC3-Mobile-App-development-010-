@@ -10,3 +10,4 @@ export * from './Tag';
 export * from './Avatar';
 export * from './MemberChip';
 export * from './ProgressBar';
+export * from './CountUpText';
