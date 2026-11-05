@@ -7,3 +7,4 @@ dist/
 *.db-wal
 *serviceAccount*.json
 firebase-service-account.json
+

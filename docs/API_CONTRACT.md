@@ -407,3 +407,4 @@ Every FCM data push notification sent by the backend contains the following stan
 | `EXPENSE_ADDED` | "Expense Added" | All split members (except payer) | `"Expenses"` |
 | `SETTLEMENT_RECORDED` | "Settlement Received" | Recipient member | `"Expenses"` |
 | `BUDGET_ALERT` | "Budget Alert" | All household members | `"Home"` |
+

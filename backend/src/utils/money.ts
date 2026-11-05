@@ -14,3 +14,4 @@ export function paisaToPkr(paisa: number): number {
 export function formatPkr(paisa: number): string {
   return (paisa / 100).toFixed(2);
 }
+

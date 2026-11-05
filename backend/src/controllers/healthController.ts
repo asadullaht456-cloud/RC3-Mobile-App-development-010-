@@ -6,3 +6,4 @@ export function getHealth(_req: Request, res: Response): void {
     timestamp: new Date().toISOString()
   });
 }
+

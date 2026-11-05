@@ -28,3 +28,4 @@ export function errorHandler(
     details: err.details || null
   });
 }
+

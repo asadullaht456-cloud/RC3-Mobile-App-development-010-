@@ -58,3 +58,4 @@ export interface ApiErrorResponse {
   error: string;
   details?: any;
 }
+

@@ -37,3 +37,4 @@ try {
 
 export const firebaseAdmin = admin;
 export const isFirebaseInitialized = () => firebaseInitialized;
+
