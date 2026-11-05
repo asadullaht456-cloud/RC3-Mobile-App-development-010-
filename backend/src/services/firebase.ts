@@ -15,21 +15,18 @@ try {
   if (serviceAccountPath && fs.existsSync(serviceAccountPath)) {
     const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
     admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount)
+      credential: admin.cert(serviceAccount)
     });
     firebaseInitialized = true;
     console.log('🔥 Firebase Admin initialized successfully with service account');
+  } else if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+    admin.initializeApp({
+      credential: admin.applicationDefault()
+    });
+    firebaseInitialized = true;
+    console.log('🔥 Firebase Admin initialized with application default credentials');
   } else {
-    // Try default credentials or mark uninitialized
-    if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
-      admin.initializeApp({
-        credential: admin.credential.applicationDefault()
-      });
-      firebaseInitialized = true;
-      console.log('🔥 Firebase Admin initialized with application default credentials');
-    } else {
-      console.warn('⚠️ Firebase service account not found. Firebase Admin is in dev standby mode.');
-    }
+    console.warn('⚠️ Firebase service account not found. Firebase Admin is in dev standby mode.');
   }
 } catch (error) {
   console.warn('⚠️ Failed to initialize Firebase Admin:', error);
@@ -37,4 +34,3 @@ try {
 
 export const firebaseAdmin = admin;
 export const isFirebaseInitialized = () => firebaseInitialized;
-

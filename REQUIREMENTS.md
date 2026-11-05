@@ -41,17 +41,17 @@ Shared: `/docs/API_CONTRACT.md` (owned by Dev 2, read-only for Dev 1)
 # Dev 2: Backend + Database
 
 ## Phase B1: Setup & Schema
-- [ ] `/backend` initialized (Express + TypeScript + better-sqlite3 + zod + cors + firebase-admin)
-- [ ] Folder structure: `routes/`, `controllers/`, `services/`, `db/`, `middleware/`, `utils/`
-- [ ] SQLite tables: `members`, `shopping_items`, `expenses`, `expense_splits`, `settlements`, `settings`, `device_tokens`
-- [ ] `members` includes `email` and `firebase_uid`
-- [ ] Seed members: M01 Ali, M02 Ayesha, M03 Bilal (with emails)
-- [ ] Seed monthly budget: PKR 5,000.00
-- [ ] Money stored as integer paisa
-- [ ] DB file persists across server restarts
-- [ ] Firebase Admin initialized from env (service account path in `.env`, gitignored)
-- [ ] `/docs/API_CONTRACT.md` written (all endpoints, payloads, responses, auth header, error format)
-- [ ] Standard error response: `{ error: string, details?: any }`
+- [x] `/backend` initialized (Express + TypeScript + better-sqlite3 + zod + cors + firebase-admin)
+- [x] Folder structure: `routes/`, `controllers/`, `services/`, `db/`, `middleware/`, `utils/`
+- [x] SQLite tables: `members`, `shopping_items`, `expenses`, `expense_splits`, `settlements`, `settings`, `device_tokens`
+- [x] `members` includes `email` and `firebase_uid`
+- [x] Seed members: M01 Ali, M02 Ayesha, M03 Bilal (with emails)
+- [x] Seed monthly budget: PKR 5,000.00
+- [x] Money stored as integer paisa
+- [x] DB file persists across server restarts
+- [x] Firebase Admin initialized from env (service account path in `.env`, gitignored)
+- [x] `/docs/API_CONTRACT.md` written (all endpoints, payloads, responses, auth header, error format)
+- [x] Standard error response: `{ error: string, details?: any }`
 
 ## Phase B2: Firebase Authentication
 - [ ] Auth middleware verifies `Authorization: Bearer <Firebase ID token>`

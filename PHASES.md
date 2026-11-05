@@ -47,9 +47,9 @@ main ──────────────┬──────────
 ## 2. Dev 2 Phases: Backend + Database (Your Role)
 
 ### Phase B1: Setup, Schema & API Contract
-- [ ] Initialize `/backend` (`npm init -y`, TypeScript, tsx, express, cors, better-sqlite3, zod, dotenv, firebase-admin)
-- [ ] Establish architecture: `src/routes/`, `src/controllers/`, `src/services/`, `src/db/`, `src/middleware/`, `src/utils/`
-- [ ] Create persistent SQLite database schema in `src/db/`:
+- [x] Initialize `/backend` (`npm init -y`, TypeScript, tsx, express, cors, better-sqlite3, zod, dotenv, firebase-admin)
+- [x] Establish architecture: `src/routes/`, `src/controllers/`, `src/services/`, `src/db/`, `src/middleware/`, `src/utils/`
+- [x] Create persistent SQLite database schema in `src/db/`:
   - `members`: `id` (TEXT PK), `name` (TEXT), `email` (TEXT UNIQUE), `firebase_uid` (TEXT NULL)
   - `shopping_items`: `id` (TEXT PK), `title` (TEXT), `unit` (TEXT), `requested_qty` (INTEGER), `status` (TEXT: Pending/Bought)
   - `expenses`: `id` (TEXT PK), `title` (TEXT), `category` (TEXT), `amount` (INTEGER paisa), `payer_id` (TEXT FK), `split_type` (TEXT: EQUAL/CUSTOM), `date` (TEXT)
@@ -57,12 +57,12 @@ main ──────────────┬──────────
   - `settlements`: `id` (TEXT PK), `sender_id` (TEXT FK), `recipient_id` (TEXT FK), `amount` (INTEGER paisa), `created_at` (TEXT)
   - `settings`: `key` (TEXT PK), `value` (TEXT) (e.g. monthly_budget = 500000 paisa)
   - `device_tokens`: `token` (TEXT PK), `member_id` (TEXT FK), `updated_at` (TEXT)
-- [ ] Seed base data:
+- [x] Seed base data:
   - Members: `M01` (Ali, ali@demo.com), `M02` (Ayesha, ayesha@demo.com), `M03` (Bilal, bilal@demo.com)
   - Budget: PKR 5,000.00 (`500000` paisa)
-- [ ] Initialize Firebase Admin SDK from environment variable path (`FIREBASE_SERVICE_ACCOUNT_PATH`)
-- [ ] Write complete specification in `/docs/API_CONTRACT.md` (Endpoints, request/response JSON, HTTP status codes, error payload `{ error: string, details?: any }`)
-- [ ] **Trigger Sync S1**: Notify Dev 1 that API contract is ready.
+- [x] Initialize Firebase Admin SDK from environment variable path (`FIREBASE_SERVICE_ACCOUNT_PATH`)
+- [x] Write complete specification in `/docs/API_CONTRACT.md` (Endpoints, request/response JSON, HTTP status codes, error payload `{ error: string, details?: any }`)
+- [x] **Trigger Sync S1**: Notify Dev 1 that API contract is ready.
 
 ### Phase B2: Firebase Authentication & Identity
 - [ ] Implement Auth middleware `src/middleware/auth.ts`:
