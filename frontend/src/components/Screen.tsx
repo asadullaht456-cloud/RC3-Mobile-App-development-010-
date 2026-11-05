@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, StyleSheet, SafeAreaView, StyleProp, ViewStyle } from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle, Platform, StatusBar as RNStatusBar } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../context/ThemeContext';
 
 interface ScreenProps {
@@ -11,9 +12,17 @@ interface ScreenProps {
 
 export const Screen: React.FC<ScreenProps> = ({ children, style, hideGlow = false }) => {
   const { colors, mode } = useTheme();
+  const insets = useSafeAreaInsets();
+
+  // Ensure robust safe area inset on both Android (where insets.top might be 0 without edge-to-edge) and iOS
+  const topInset = Math.max(
+    insets.top,
+    Platform.OS === 'android' ? (RNStatusBar.currentHeight || 28) : 20
+  );
+  const bottomInset = Math.max(insets.bottom, Platform.OS === 'android' ? 12 : 0);
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.bg }]}>
+    <View style={[styles.root, { backgroundColor: colors.bg, paddingTop: topInset, paddingBottom: bottomInset }]}>
       <StatusBar style={mode === 'dark' ? 'light' : 'dark'} />
       <View style={[styles.container, style]}>
         {!hideGlow && (
@@ -29,12 +38,12 @@ export const Screen: React.FC<ScreenProps> = ({ children, style, hideGlow = fals
         )}
         {children}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
+  root: {
     flex: 1,
   },
   container: {

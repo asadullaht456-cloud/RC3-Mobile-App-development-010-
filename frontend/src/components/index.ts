@@ -11,3 +11,4 @@ export * from './Avatar';
 export * from './MemberChip';
 export * from './ProgressBar';
 export * from './CountUpText';
+export * from './ParticleBackground';
